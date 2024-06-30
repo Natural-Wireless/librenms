@@ -7,7 +7,7 @@ use LibreNMS\Interfaces\Discovery\Sensors\WirelessPowerDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessRssiDiscovery;
 use LibreNMS\OS;
 
-class IpasolinkExAdvanced extends OS implements WirelessPowerDiscovery, WirelessRssiDiscovery
+class NecIpasolinkExAdvanced extends OS implements WirelessPowerDiscovery, WirelessRssiDiscovery
 {
     public function discoverWirelessPower()
     {
