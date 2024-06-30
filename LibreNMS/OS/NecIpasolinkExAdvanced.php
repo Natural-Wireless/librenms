@@ -14,7 +14,7 @@ class NecIpasolinkExAdvanced extends OS implements WirelessPowerDiscovery, Wirel
         $oid = '.1.3.6.1.4.1.119.2.3.69.501.8.1.1.4.16842752';
 
         return [
-            new WirelessSensor('power', $this->getDeviceId(), $oid, 'nec-ipasolink-ex-advanced', 0, 'Tx Power', null, 1, 1, null, null, 12, null, 8, null),
+            new WirelessSensor('power', $this->getDeviceId(), $oid, 'nec-ipasolink-ex-advanced', 0, 'Tx Power', null, 1, 1, "sum", null, 12, null, 8, null),
         ];
     }
 
@@ -22,7 +22,7 @@ class NecIpasolinkExAdvanced extends OS implements WirelessPowerDiscovery, Wirel
     {
         $oid = '.1.3.6.1.4.1.119.2.3.69.501.8.1.1.6.16842752';
         return [
-            new WirelessSensor('rssi', $this->getDeviceId(), $oid, 'nec-ipasolink-ex-advanced', 0, 'RSL', null, 1, 1, null, null, null, -60, null, -50),
+            new WirelessSensor('rssi', $this->getDeviceId(), $oid, 'nec-ipasolink-ex-advanced', 0, 'RSL', null, 1, 1, "sum", null, null, -60, null, -50),
         ];
     }
 }
