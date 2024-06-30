@@ -1,7 +1,7 @@
 os: nec
 text: "NEC"
 type: wireless
-icon: aviat
+icon: nec
 over:
     - { graph: device_bits, text: 'Traffic' }
     - { graph: device_wireless_rssi, text: 'RSSI' }
