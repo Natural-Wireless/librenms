@@ -230,7 +230,7 @@ class Airos extends OS implements
     {
         $oid = '.1.3.6.1.4.1.41112.1.4.5.1.6.1'; //UBNT-AirMAX-MIB::ubntWlStatRssi.1
         $sensors = [
-            new WirelessSensor('rssi', $this->getDeviceId(), $oid, 'airos', 0, 'Overall RSSI'),
+            new WirelessSensor('rssi', $this->getDeviceId(), $oid, 'airos', 0, 'Overall RSSI', multiplier: -1.0),
         ];
 
         $data = snmpwalk_cache_oid($this->getDeviceArray(), 'ubntRadioRssi', [], 'UBNT-AirMAX-MIB');
