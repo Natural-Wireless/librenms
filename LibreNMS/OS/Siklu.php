@@ -94,7 +94,7 @@ class Siklu extends OS implements
         $oid = '.1.3.6.1.4.1.31926.2.1.1.19.1'; // RADIO-BRIDGE-MIB::rfAverageRssi.1
 
         return [
-            new WirelessSensor('rssi', $this->getDeviceId(), $oid, 'siklu', 1, 'RSSI'),
+            new WirelessSensor('rssi', $this->getDeviceId(), $oid, 'siklu', 1, 'RSSI', low_limit: -60, low_warn: -50),
         ];
     }
 

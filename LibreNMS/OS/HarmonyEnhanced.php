@@ -23,7 +23,9 @@ class HarmonyEnhanced extends OS implements WirelessRssiDiscovery, WirelessSnrDi
                 'harmony_enhanced',
                 $index,
                 'RSL Radio ' . $index,
-                divisor: 10
+                divisor: 10,
+                low_limit: -60,
+                low_warn: -50
             );
         }
 
