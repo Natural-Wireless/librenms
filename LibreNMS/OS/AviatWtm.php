@@ -134,7 +134,9 @@ class AviatWtm extends OS implements
                 "RSL ({$name[$index]})",
                 $data['aviatRxPerformRslReadingCurrent'],
                 1,
-                10
+                10,
+                low_limit: -60, 
+                low_warn: -50
             );
         }
 
