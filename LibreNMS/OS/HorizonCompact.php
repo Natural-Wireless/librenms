@@ -34,7 +34,7 @@ class HorizonCompact extends OS implements WirelessSnrDiscovery, WirelessPowerDi
         $oid = '.1.3.6.1.4.1.7262.2.2.5.1.2.4.0';
 
         return [
-            new WirelessSensor('rssi', $this->getDeviceId(), $oid, 'horizon-compact', 0, 'RSL', null, 1, 10),
+            new WirelessSensor('rssi', $this->getDeviceId(), $oid, 'horizon-compact', 0, 'RSL', null, 1, 10, low_limit: -60, low_warn: -50),
         ];
     }
 
