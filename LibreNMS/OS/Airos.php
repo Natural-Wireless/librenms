@@ -242,7 +242,8 @@ class Airos extends OS implements
                 'airos',
                 $index,
                 'RSSI: Chain ' . str_replace('1.', '', $index),
-                $entry['ubntRadioRssi']
+                $entry['ubntRadioRssi'],
+                multiplier: -1.0
             );
         }
 
