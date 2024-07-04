@@ -58,13 +58,20 @@ class Core implements Module
 
     public function discover(OS $os): void
     {
-        $snmpdata = SnmpQuery::numeric()->get(['SNMPv2-MIB::sysObjectID.0', 'SNMPv2-MIB::sysDescr.0', 'SNMPv2-MIB::sysName.0'])
+        $device = $os->getDevice();
+
+        if($device->os == 'nec-ipasolink-ex-advanced') {
+            $sysNameMib = ".1.3.6.1.4.1.119.2.3.69.5.1.1.1.3.1";
+        } else {
+            $sysNameMib = "SNMPv2-MIB::sysName.0";
+        }
+
+        $snmpdata = SnmpQuery::numeric()->get(['SNMPv2-MIB::sysObjectID.0', 'SNMPv2-MIB::sysDescr.0', $sysNameMib])
             ->values();
 
-        $device = $os->getDevice();
         $device->fill([
             'sysObjectID' => $snmpdata['.1.3.6.1.2.1.1.2.0'] ?? null,
-            'sysName' => $snmpdata['.1.3.6.1.2.1.1.5.0'] ?? null,
+            'sysName' => $snmpdata[$sysNameMib] ?? null,
             'sysDescr' => $snmpdata['.1.3.6.1.2.1.1.1.0'] ?? null,
         ]);
 
@@ -79,8 +86,6 @@ class Core implements Module
         if ($device->isDirty('os')) {
             Eventlog::log('Device OS changed: ' . $device->getOriginal('os') . ' -> ' . $device->os, $device, 'system', Severity::Notice);
             $os->getDeviceArray()['os'] = $device->os;
-
-            echo 'Changed ';
         }
 
         // Set type to a predefined type for the OS if it's not already set
