@@ -96,15 +96,21 @@ class ValidateDeviceAndCreate
                 #$this->device->sysName = SnmpQuery::device($this->device)->get('SNMPv2-MIB::sysName.0')->value();
                 $this->device->os = Core::detectOS($this->device);
 
+                # Natural Wireless Patch / Hack
+                # July 4th, 2024
+                # 
+                # DO NOT REMOVE
+                #
+                # NEC doesn't seem to use SNMPv2-MIB::sysName.0 properly. It is always empty.
+                # If we are polling an NEC device, use custom MIB to fetch NE Name
+                # 
                 if($this->device->os == 'nec-ipasolink-ex-advanced') {
                     $sysNameMib = ".1.3.6.1.4.1.119.2.3.69.5.1.1.1.3.1";
                 } else {
                     $sysNameMib = "SNMPv2-MIB::sysName.0";
                 }
 
-                $this->device->sysName = SnmpQuery::device($this->device)->get($sysNameMib)->value();
-                
-                echo($this->device->sysName);
+                $this->device->sysName = SnmpQuery::device($this->device)->get($sysNameMib)->value();            
 
                 $this->exceptIfSysNameExists();
 
