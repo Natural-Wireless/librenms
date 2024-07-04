@@ -6,9 +6,17 @@ use LibreNMS\Device\WirelessSensor;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessPowerDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessRssiDiscovery;
 use LibreNMS\OS;
+use App\Models\Device;
 
 class NecIpasolinkExAdvanced extends OS implements WirelessPowerDiscovery, WirelessRssiDiscovery
 {
+    public function discoverOS(Device $device): void
+    {
+        parent::discoverOS($device); // yaml
+
+        $device->sysName = \SnmpQuery::get('.1.3.6.1.4.1.119.2.3.69.5.1.1.1.3.1')->value() ?: $device->sysName;
+    }
+
     public function discoverWirelessPower()
     {
         $oid = '.1.3.6.1.4.1.119.2.3.69.501.8.1.1.4.16842752';

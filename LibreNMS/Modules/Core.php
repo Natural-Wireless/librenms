@@ -58,20 +58,13 @@ class Core implements Module
 
     public function discover(OS $os): void
     {
-        $device = $os->getDevice();
-
-        if($device->os == 'nec-ipasolink-ex-advanced') {
-            $sysNameMib = ".1.3.6.1.4.1.119.2.3.69.5.1.1.1.3.1";
-        } else {
-            $sysNameMib = "SNMPv2-MIB::sysName.0";
-        }
-
-        $snmpdata = SnmpQuery::numeric()->get(['SNMPv2-MIB::sysObjectID.0', 'SNMPv2-MIB::sysDescr.0', $sysNameMib])
+        $snmpdata = SnmpQuery::numeric()->get(['SNMPv2-MIB::sysObjectID.0', 'SNMPv2-MIB::sysDescr.0', 'SNMPv2-MIB::sysName.0'])
             ->values();
 
+        $device = $os->getDevice();
         $device->fill([
             'sysObjectID' => $snmpdata['.1.3.6.1.2.1.1.2.0'] ?? null,
-            'sysName' => $snmpdata[$sysNameMib] ?? null,
+            'sysName' => $snmpdata['.1.3.6.1.2.1.1.5.0'] ?? null,
             'sysDescr' => $snmpdata['.1.3.6.1.2.1.1.1.0'] ?? null,
         ]);
 
