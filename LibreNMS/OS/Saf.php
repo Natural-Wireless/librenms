@@ -114,7 +114,9 @@ class Saf extends OS implements
                 '.1.3.6.1.4.1.7571.100.1.1.5.1.1.1.10.1.5.1',
                 'saf-rx',
                 1,
-                'Rx Power'
+                'Rx Power',
+                low_limit: -60, 
+                low_warn: -50
             ),
             // SAF-IPRADIO::radioTxPower.local
             new WirelessSensor(
