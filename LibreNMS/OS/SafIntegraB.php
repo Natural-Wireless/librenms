@@ -125,7 +125,9 @@ class SafIntegraB extends OS implements
                 '.1.3.6.1.4.1.7571.100.1.1.7.1.2.3.0',
                 'saf-integrab-rx-level',
                 'integraBradioRxLevel',
-                'Rx Level'
+                'Rx Level',
+                low_limit: -60, 
+                low_warn: -50
             ),
         ];
     }
