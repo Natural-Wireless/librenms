@@ -50,6 +50,30 @@ modules:
                     states:
                         - { value: 0, generic: 0, graph: 1, descr: Disabled }
                         - { value: 1, generic: 0, graph: 1, descr: Enabled }
+                -
+                    oid: cambiumAfcServerStatus
+                    num_oid: '.1.3.6.1.4.1.17713.21.1.11.1.0'
+                    descr: AFC Server Status
+                    states:
+                        - { value: -1, generic: 3, graph: 0, descr: No Status  }
+                        - { value: 0, generic: 0, graph: 0, descr: Success }
+                        - { value: 1, generic: 2, graph: 0, descr: Configuration is not valid }
+                        - { value: 2, generic: 2, graph: 0, descr: Application starting error }
+                        - { value: 10, generic: 2, graph: 0, descr: Protocol initialization error }
+                        - { value: 11, generic: 2, graph: 0, descr: Connection failure }
+                        - { value: 12, generic: 3, graph: 0, descr: Empty response }
+                        - { value: 13, generic: 2, graph: 0, descr: No token in response }
+                        - { value: 31, generic: 2, graph: 0, descr: GPS Error }
+                        - { value: 32, generic: 2, graph: 0, descr: Empry pairing token }
+                        - { value: 33, generic: 2, graph: 0, descr: Protocol initialization error }
+                        - { value: 34, generic: 2, graph: 0, descr: Generic error }
+                        - { value: 100, generic: 2, graph: 0, descr: General error }
+                        - { value: 200, generic: 0, graph: 0, descr: Success }
+                        - { value: 403, generic: 2, graph: 0, descr: Invalid pairing token, triggering pairing again }
+                        - { value: 404, generic: 2, graph: 0, descr: Server not found }
+                        - { value: 503, generic: 2, graph: 0, descr: Service unavailable }
+                        
+
                         
                 -
                     oid: ePMP2000SmartAntennaStatus
