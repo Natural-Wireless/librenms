@@ -69,7 +69,7 @@ modules:
                         - { value: 34, generic: 2, graph: 0, descr: Generic error }
                         - { value: 100, generic: 2, graph: 0, descr: General error }
                         - { value: 200, generic: 0, graph: 0, descr: Success }
-                        - { value: 403, generic: 2, graph: 0, descr: Invalid pairing token, triggering pairing again }
+                        - { value: 403, generic: 2, graph: 0, descr: Invalid pairing token triggering pairing again }
                         - { value: 404, generic: 2, graph: 0, descr: Server not found }
                         - { value: 503, generic: 2, graph: 0, descr: Service unavailable }
                 -
