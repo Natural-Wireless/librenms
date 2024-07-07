@@ -19,6 +19,7 @@ modules:
                     oid: sysDFSDetectedCount
                     num_oid: '.1.3.6.1.4.1.17713.21.2.1.36.{{ $index }}'
                     descr:  DFS Detected Count
+                
         state:
             data:
                 -
@@ -67,11 +68,210 @@ modules:
                         - { value: 32, generic: 2, graph: 0, descr: Empry pairing token }
                         - { value: 33, generic: 2, graph: 0, descr: Protocol initialization error }
                         - { value: 34, generic: 2, graph: 0, descr: Generic error }
-                        - { value: 100, generic: 2, graph: 0, descr: General error }
+                        - { value: 100, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 101, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 102, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 103, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 104, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 105, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 106, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 107, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 108, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 109, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 110, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 111, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 112, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 113, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 114, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 115, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 116, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 117, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 118, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 119, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 120, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 121, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 122, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 123, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 124, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 125, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 126, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 127, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 128, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 129, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 130, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 131, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 132, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 133, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 134, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 135, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 136, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 137, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 138, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 139, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 140, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 141, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 142, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 143, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 144, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 145, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 146, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 147, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 148, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 149, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 150, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 151, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 152, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 153, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 154, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 155, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 156, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 157, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 158, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 159, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 160, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 161, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 162, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 163, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 164, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 165, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 166, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 167, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 168, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 169, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 170, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 171, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 172, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 173, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 174, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 175, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 176, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 177, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 178, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 179, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 180, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 181, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 182, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 183, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 184, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 185, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 186, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 187, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 188, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 189, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 190, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 191, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 192, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 193, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 194, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 195, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 196, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 197, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 198, generic: 2, graph: 0, descr: General errors related to the protocol }
+                        - { value: 199, generic: 2, graph: 0, descr: General errors related to the protocol }
                         - { value: 200, generic: 0, graph: 0, descr: Success }
+                        - { value: 300, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 301, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 302, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 303, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 304, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 305, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 306, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 307, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 308, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 309, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 310, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 311, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 312, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 313, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 314, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 315, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 316, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 317, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 318, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 319, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 320, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 321, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 322, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 323, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 324, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 325, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 326, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 327, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 328, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 329, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 330, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 331, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 332, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 333, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 334, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 335, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 336, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 337, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 338, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 339, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 340, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 341, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 342, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 343, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 344, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 345, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 346, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 347, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 348, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 349, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 350, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 351, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 352, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 353, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 354, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 355, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 356, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 357, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 358, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 359, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 360, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 361, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 362, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 363, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 364, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 365, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 366, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 367, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 368, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 369, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 370, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 371, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 372, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 373, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 374, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 375, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 376, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 377, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 378, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 379, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 380, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 381, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 382, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 383, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 384, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 385, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 386, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 387, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 388, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 389, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 390, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 391, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 392, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 393, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 394, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 395, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 396, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 397, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 398, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
+                        - { value: 399, generic: 2, graph: 0, descr: Error events specific to message exchanges for the Available Spectrum Inquiry }
                         - { value: 403, generic: 2, graph: 0, descr: Invalid pairing token triggering pairing again }
                         - { value: 404, generic: 2, graph: 0, descr: Server not found }
-                        - { value: 503, generic: 2, graph: 0, descr: Service unavailable }
+                        - { value: 503, generic: 2, graph: 0, descr: Service unavailable }                
                 -
                     oid: ePMP2000SmartAntennaStatus
                     num_oid: '.1.3.6.1.4.1.17713.21.1.1.41.{{ $index }}'
