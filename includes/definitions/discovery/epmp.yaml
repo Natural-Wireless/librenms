@@ -68,6 +68,7 @@ modules:
                         - { value: 32, generic: 2, graph: 0, descr: Empry pairing token }
                         - { value: 33, generic: 2, graph: 0, descr: Protocol initialization error }
                         - { value: 34, generic: 2, graph: 0, descr: Generic error }
+                        - { value: 35, generic: 2, graph: 0, descr: Unknown response from AFC server }
                         - { value: 100, generic: 2, graph: 0, descr: General errors related to the protocol }
                         - { value: 101, generic: 2, graph: 0, descr: General errors related to the protocol }
                         - { value: 102, generic: 2, graph: 0, descr: General errors related to the protocol }
