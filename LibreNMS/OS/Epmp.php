@@ -31,6 +31,7 @@ use LibreNMS\Interfaces\Data\DataStorageInterface;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessClientsDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessFrequencyDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessRssiDiscovery;
+use LibreNMS\Interfaces\Discovery\Sensors\WirelessPowerDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessSnrDiscovery;
 use LibreNMS\Interfaces\Polling\OSPolling;
 use LibreNMS\OS;
@@ -42,7 +43,8 @@ class Epmp extends OS implements
     WirelessRssiDiscovery,
     WirelessSnrDiscovery,
     WirelessFrequencyDiscovery,
-    WirelessClientsDiscovery
+    WirelessClientsDiscovery,
+    WirelessPowerDiscovery
 {
     public function discoverOS(Device $device): void
     {
@@ -232,4 +234,36 @@ class Epmp extends OS implements
             ),
         ];
     }
+
+    /**
+     * Discover wireless transmit power.
+     * Returns an array of LibreNMS\Device\Sensor objects that have been discovered
+     *
+     * @return array Sensors
+     */
+    public function discoverWirelessPower()
+    {
+        return [
+            new WirelessSensor(
+                'power',
+                $this->getDeviceId(),
+                '.1.3.6.1.4.1.17713.21.1.11.3.0',
+                'epmp',
+                0,
+                'AFC TX Power',
+                null
+            ),
+            new WirelessSensor(
+                'power',
+                $this->getDeviceId(),
+                '.1.3.6.1.4.1.17713.21.1.2.5.0',
+                'epmp',
+                0,
+                'Actual TX Power',
+                null
+            ),
+        ];
+    }
 }
+
+
