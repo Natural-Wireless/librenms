@@ -258,7 +258,7 @@ class Epmp extends OS implements
                 $this->getDeviceId(),
                 '.1.3.6.1.4.1.17713.21.1.2.5.0',
                 'epmp',
-                0,
+                1,
                 'Actual TX Power',
                 null
             ),
