@@ -103,7 +103,7 @@ class AviatWtm extends OS implements
                 ".1.3.6.1.4.1.2509.9.3.2.1.1.12.$index",
                 'aviat-wtm-carrier-rx-rate',
                 $index,
-                "TX Capacity ({$name[$index]})",
+                "RX Capacity ({$name[$index]})",
                 $data['aviatModemCurCapacityRx'],
                 1000
             );
