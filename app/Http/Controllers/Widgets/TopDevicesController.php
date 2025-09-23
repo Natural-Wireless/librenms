@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TopDevices.php
  *
@@ -43,7 +44,7 @@ use LibreNMS\Util\Validate;
 
 class TopDevicesController extends WidgetController
 {
-    protected $title = 'Top Devices';
+    protected string $name = 'top-devices';
     protected $defaults = [
         'title' => null,
         'top_query' => 'traffic',
@@ -53,18 +54,14 @@ class TopDevicesController extends WidgetController
         'device_group' => null,
     ];
 
-    public function title()
+    public function getTitle(): string
     {
         $settings = $this->getSettings();
 
-        return isset($settings['title']) ? $settings['title'] : $this->title;
+        return $settings['title'] ?? parent::getTitle();
     }
 
-    /**
-     * @param  Request  $request
-     * @return View
-     */
-    public function getView(Request $request)
+    public function getView(Request $request): string|View
     {
         $settings = $this->getSettings();
         $sort = $settings['sort_order'];
@@ -101,11 +98,6 @@ class TopDevicesController extends WidgetController
         return view('widgets.top-devices', $data);
     }
 
-    public function getSettingsView(Request $request)
-    {
-        return view('widgets.settings.top-devices', $this->getSettings(true));
-    }
-
     /**
      * @param  array|string  $headers
      * @param  Collection  $rows
@@ -128,7 +120,7 @@ class TopDevicesController extends WidgetController
     {
         $settings = $this->getSettings();
 
-        /** @var Builder $query */
+        /** @var Builder<\App\Models\DeviceRelatedModel> $query */
         return $query->with(['device' => function ($query) {
             return $query->select('device_id', 'hostname', 'sysName', 'display', 'status', 'os');
         }])
@@ -136,11 +128,8 @@ class TopDevicesController extends WidgetController
             ->leftJoin('devices', "$left_table.device_id", 'devices.device_id')
             ->groupBy("$left_table.device_id")
             ->where('devices.last_polled', '>', Carbon::now()->subMinutes($settings['time_interval']))
-            ->when($settings['device_group'], function ($query) use ($settings) {
-                /** @var Builder<\App\Models\DeviceRelatedModel> $query */
-                $inDeviceGroup = $query->inDeviceGroup($settings['device_group']); /** @var Builder $inDeviceGroup */
-
-                return $inDeviceGroup;
+            ->when($settings['device_group'], function (Builder $query) use ($settings) {
+                return $query->inDeviceGroup($settings['device_group']);
             });
     }
 

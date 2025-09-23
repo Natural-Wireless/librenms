@@ -1,12 +1,12 @@
 <?php
 
+use App\Facades\LibrenmsConfig;
 use App\Models\Eventlog;
-use LibreNMS\Config;
 use LibreNMS\Exceptions\JsonAppException;
 use LibreNMS\Exceptions\JsonAppMissingKeysException;
 use LibreNMS\RRD\RrdDefinition;
 
-require_once Config::get('install_dir') . '/includes/ss-shared.inc.php';
+require_once LibrenmsConfig::get('install_dir') . '/includes/ss-shared.inc.php';
 
 $name = 'ss';
 $output_success = 'OK';
@@ -40,7 +40,7 @@ if (! function_exists('ss_data_update_helper')) {
             'rrd_def' => $rrd_def,
             'rrd_name' => $rrd_name,
         ];
-        data_update($device, $polling_type, $tags, $fields);
+        app('Datastore')->put($device, $polling_type, $tags, $fields);
 
         return $metrics;
     }

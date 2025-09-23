@@ -14,7 +14,7 @@ Input:
 Example:
 
 ```curl
-curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://librenms.org/api/v0/ports?columns=ifName%2Cport_id
+curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://foo.example/api/v0/ports?columns=ifName%2Cport_id
 ```
 
 Output:
@@ -56,7 +56,7 @@ Input:
 Example:
 
 ```curl
-curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://librenms.org/api/v0/ports/search/lo
+curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://foo.example/api/v0/ports/search/lo
 ```
 
 Output:
@@ -103,7 +103,7 @@ Input:
 Example:
 
 ```curl
-curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://librenms.org/api/v0/ports/search/ifName/lo
+curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://foo.example/api/v0/ports/search/ifName/lo
 ```
 
 Output:
@@ -150,9 +150,9 @@ Input:
 Example:
 
 ```curl
-curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://librenms.org/api/v0/ports/mac/00:11:22:33:44:55
-curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://librenms.org/api/v0/ports/mac/001122.334455?filter=first
-curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://librenms.org/api/v0/ports/mac/001122334455?filter=first
+curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://foo.example/api/v0/ports/mac/00:11:22:33:44:55
+curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://foo.example/api/v0/ports/mac/001122.334455?filter=first
+curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://foo.example/api/v0/ports/mac/001122334455?filter=first
 ```
 
 Output:
@@ -244,9 +244,10 @@ Output:
 
 Get all info for a particular port.
 
-Route: `/api/v0/ports/:portid`
+Route: `/api/v0/ports/:portid?with=vlans`
 
 - portid must be an integer
+- it's possible to add allowed associated relations to the port using the `with` option. Allowed: `vlans`,`device`
 
 Input:
 
@@ -255,7 +256,7 @@ Input:
 Example:
 
 ```curl
-curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://librenms.org/api/v0/ports/323
+curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://foo.example/api/v0/ports/323
 ```
 
 Output:
@@ -358,7 +359,7 @@ Input:
 Example:
 
 ```curl
-curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://librenms.org/api/v0/ports/323/ip
+curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://foo.example/api/v0/ports/323/ip
 ```
 
 Output:
@@ -391,7 +392,7 @@ Route: `/api/v0/ports/:portid/transceiver`
 Example:
 
 ```curl
-curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://librenms.org/api/v0/ports/50736/transceiver
+curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://foo.example/api/v0/ports/50736/transceiver
 ```
 
 Output:
@@ -435,7 +436,7 @@ Route: `/api/v0/ports/:portid/description`
 Example:
 
 ```curl
-curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://librenms.org/api/v0/ports/323/description
+curl -H 'X-Auth-Token: YOURAPITOKENHERE' https://foo.example/api/v0/ports/323/description
 ```
 
 Output:
@@ -461,7 +462,7 @@ Sending an empty string will reset the description to default.
 Example:
 
 ```curl
-curl -X PATCH -d '{"description": "Out-of-Band Management Link"}' -H 'X-Auth-Token: YOURAPITOKENHERE' https://librenms.org/api/v0/ports/323/description
+curl -X PATCH -d '{"description": "Out-of-Band Management Link"}' -H 'X-Auth-Token: YOURAPITOKENHERE' https://foo.example/api/v0/ports/323/description
 ```
 
 Output:

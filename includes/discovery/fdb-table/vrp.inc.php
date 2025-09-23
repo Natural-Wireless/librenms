@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -30,8 +31,7 @@ if (! empty($fdbPort_table)) {
             if (! $ifIndex) {
                 continue;
             }
-            $port = get_port_by_index_cache($device['device_id'], $ifIndex);
-            $port_id = $port['port_id'];
+            $port_id = PortCache::getIdFromIfIndex($ifIndex, $device['device_id']);
             $mac_address = Mac::parse($mac)->hex();
             if (strlen($mac_address) != 12) {
                 Log::debug("MAC address padding failed for $mac\n");
@@ -56,8 +56,7 @@ if (! empty($hwCfgMacAddrQueryIfIndex)) {
                     if (! $ifIndex) {
                         continue;
                     }
-                    $port = get_port_by_index_cache($device['device_id'], $ifIndex);
-                    $port_id = $port['port_id'];
+                    $port_id = PortCache::getIdFromIfIndex($ifIndex, $device['device_id']);
                     $mac_address = Mac::parse($mac)->hex();
                     if (strlen($mac_address) != 12) {
                         Log::debug("MAC address padding failed for $mac\n");

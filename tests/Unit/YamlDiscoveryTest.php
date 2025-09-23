@@ -1,4 +1,5 @@
 <?php
+
 /**
  * YamlDiscoveryTest.php
  *
@@ -29,7 +30,7 @@ use LibreNMS\Discovery\Yaml\OidField;
 use LibreNMS\Discovery\Yaml\YamlDiscoveryField;
 use LibreNMS\Tests\TestCase;
 
-class YamlDiscoveryTest extends TestCase
+final class YamlDiscoveryTest extends TestCase
 {
     public function testYamlDiscoveryFieldCalculateValue(): void
     {

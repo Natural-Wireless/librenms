@@ -1,12 +1,12 @@
 <?php
 
+use App\Facades\LibrenmsConfig;
 use App\Models\Eventlog;
-use LibreNMS\Config;
 use LibreNMS\Exceptions\JsonAppException;
 use LibreNMS\Exceptions\JsonAppMissingKeysException;
 use LibreNMS\RRD\RrdDefinition;
 
-require_once Config::get('install_dir') . '/includes/systemd-shared.inc.php';
+require_once LibrenmsConfig::get('install_dir') . '/includes/systemd-shared.inc.php';
 
 $name = 'systemd';
 $output = 'OK';
@@ -61,7 +61,7 @@ if (! function_exists('systemd_data_update_helper')) {
             'rrd_def' => $rrd_def,
             'rrd_name' => $rrd_name,
         ];
-        data_update($device, $polling_type, $tags, $fields);
+        app('Datastore')->put($device, $polling_type, $tags, $fields);
 
         return $metrics;
     }

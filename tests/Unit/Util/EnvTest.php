@@ -1,4 +1,5 @@
 <?php
+
 /**
  * EnvTest.php
  *
@@ -28,7 +29,7 @@ namespace LibreNMS\Tests\Unit\Util;
 use LibreNMS\Tests\TestCase;
 use LibreNMS\Util\EnvHelper;
 
-class EnvTest extends TestCase
+final class EnvTest extends TestCase
 {
     public function testParseArray(): void
     {

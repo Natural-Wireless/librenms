@@ -2,12 +2,12 @@
 
 namespace LibreNMS\Modules;
 
+use App\Facades\LibrenmsConfig;
 use App\Models\Device;
 use App\Models\WirelessSensor;
 use App\Observers\ModuleModelObserver;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use LibreNMS\Config;
 use LibreNMS\DB\SyncsModels;
 use LibreNMS\Interfaces\Data\DataStorageInterface;
 use LibreNMS\Interfaces\Module;
@@ -15,6 +15,7 @@ use LibreNMS\OS;
 use LibreNMS\Polling\ModuleStatus;
 use LibreNMS\RRD\RrdDefinition;
 use LibreNMS\Util\StringHelpers;
+use SnmpQuery;
 
 class Wireless implements Module
 {
@@ -77,7 +78,7 @@ class Wireless implements Module
      */
     public function discover(OS $os): void
     {
-        $submodules = Config::get('discovery_submodules.wireless', $this->types);
+        $submodules = LibrenmsConfig::get('discovery_submodules.wireless', $this->types);
         $types = array_intersect($this->types, $submodules);
         $existingSensors = $os->getDevice()->wirelessSensors()->get()->groupBy('sensor_class');
 
@@ -110,7 +111,7 @@ class Wireless implements Module
                 // legacy discovery auto-fetched sensors with null current values
                 if ($model->sensor_current === null && ! empty($model->sensor_oids)) {
                     Log::debug("Data missing for $model->sensor_type $model->sensor_index, fetching");
-                    $value = \SnmpQuery::numeric()->get($model->sensor_oids)->values();
+                    $value = SnmpQuery::numeric()->get($model->sensor_oids)->values();
                     $model->fillValue($value);
                 }
 
@@ -132,7 +133,7 @@ class Wireless implements Module
     public function poll(OS $os, DataStorageInterface $datastore): void
     {
         // fetch and group sensors
-        $submodules = Config::get('poller_submodules.wireless', []);
+        $submodules = LibrenmsConfig::get('poller_submodules.wireless', []);
         $sensors = $os->getDevice()->wirelessSensors()
             ->when($submodules, fn ($q) => $q->whereIn('sensor_class', $submodules))
             ->get()->keyBy('sensor_id');
@@ -161,7 +162,7 @@ class Wireless implements Module
 
         // fetch all standard sensors
         $standard_sensors = $sensors->pluck('sensor_oids')->flatten()->all();
-        $fetched_data = \SnmpQuery::numeric()->get($standard_sensors)->values();
+        $fetched_data = empty($standard_sensors) ? [] : SnmpQuery::numeric()->get($standard_sensors)->values();
 
         // poll standard sensors
         foreach ($sensors->groupBy('sensor_class') as $type => $type_sensors) {

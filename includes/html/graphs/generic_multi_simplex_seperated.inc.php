@@ -1,15 +1,17 @@
 <?php
 
+use App\Facades\LibrenmsConfig;
 use App\Facades\Rrd;
-use LibreNMS\Config;
 
 require 'includes/html/graphs/common.inc.php';
 
-$unitlen = $unitlen ?? 0;
-$descr_len = $descr_len ?? 12;
-$multiplier = $multiplier ?? false;
+$unitlen ??= 0;
+$descr_len ??= 12;
+$multiplier ??= null;
+$divider ??= null;
 $previous = $graph_params->visible('previous');
-$stack = $stack ?? '';
+$stack ??= '';
+$total_units ??= '';
 
 $seperatorX = '';
 $thingX = '';
@@ -32,15 +34,15 @@ if ($nototal) {
 $unit_text = Rrd::fixedSafeDescr($unit_text, $unitlen);
 
 $colour_iter = 0;
-foreach ($rrd_list as $i => $rrd) {
+foreach ($rrd_list ?? [] as $i => $rrd) {
     if (isset($rrd['colour'])) {
         $colour = $rrd['colour'];
     } else {
-        if (! Config::get("graph_colours.$colours.$colour_iter")) {
+        if (! LibrenmsConfig::get("graph_colours.$colours.$colour_iter")) {
             $colour_iter = 0;
         }
 
-        $colour = Config::get("graph_colours.$colours.$colour_iter");
+        $colour = LibrenmsConfig::get("graph_colours.$colours.$colour_iter");
         $colour_iter++;
     }
 
@@ -83,7 +85,7 @@ foreach ($rrd_list as $i => $rrd) {
         $rrd_options .= ' CDEF:' . $g_defname . $i . 'min=' . $rrd['ds'] . $i . 'min,' . $multiplier . ',*';
         $rrd_options .= ' CDEF:' . $g_defname . $i . 'max=' . $rrd['ds'] . $i . 'max,' . $multiplier . ',*';
 
-    // If we've been passed a divider (divisor!) we make a CDEF for it.
+        // If we've been passed a divider (divisor!) we make a CDEF for it.
     } elseif (is_numeric($divider)) {
         $g_defname = $rrd['ds'] . '_cdef';
         $rrd_options .= ' CDEF:' . $g_defname . $i . '=' . $rrd['ds'] . $i . ',' . $divider . ',/';

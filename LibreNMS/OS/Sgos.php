@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sgos.php
  *
@@ -169,7 +170,7 @@ class Sgos extends OS implements ProcessorDiscovery, OSPolling
                 Str::padLeft($index, 2, '0'),
                 "Processor $count",
                 1,
-                $entry['s5ChasUtilCPUUsageLast10Minutes']
+                $entry['sgProxyCpuCoreBusyPerCent']
             );
 
             $count++;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AlertingTest.php
  *
@@ -29,7 +30,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RegexIterator;
 
-class AlertingTest extends TestCase
+final class AlertingTest extends TestCase
 {
     public function testJsonAlertCollection(): void
     {

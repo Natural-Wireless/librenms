@@ -1,4 +1,5 @@
 <?php
+
 /**
  * hp.inc.php
  *
@@ -53,7 +54,7 @@ foreach ($tables as $tablevalue) {
     if (! empty($temp)) {
         //Create State Index
         $state_name = $oid;
-        $state_index_id = create_state_index($state_name, $states);
+        create_state_index($state_name, $states);
 
         foreach ($temp as $index => $entry) {
             $drive_bay = snmp_get($device, "cpqDaPhyDrvBay.$index", '-Ovqn', 'CPQIDA-MIB', 'hp');
@@ -77,9 +78,6 @@ foreach ($tables as $tablevalue) {
                 'snmp',
                 $index
             );
-
-            //Create Sensor To State Index
-            create_sensor_to_state_index($device, $state_name, $index);
         }
     }
 }

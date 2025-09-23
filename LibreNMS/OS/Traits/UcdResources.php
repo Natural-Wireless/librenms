@@ -1,4 +1,5 @@
 <?php
+
 /**
  * UcdProcessor.php
  *
@@ -129,8 +130,6 @@ trait UcdResources
 
     public function discoverStorage(): Collection
     {
-        $disks = new Collection;
-
         return \SnmpQuery::walk('UCD-SNMP-MIB::dskTable')->mapTable(function ($data, $index) {
             $units = 1024;
             $total = $data['UCD-SNMP-MIB::dskTotal'] ?? null;
@@ -147,7 +146,7 @@ trait UcdResources
                 'type' => 'ucd-dsktable',
                 'storage_index' => $index,
                 'storage_type' => 'ucdDisk',
-                'storage_descr' => $data['UCD-SNMP-MIB::dskPath'],
+                'storage_descr' => $data['UCD-SNMP-MIB::dskPath'] ?? 'Unnamed Storage',
                 'storage_size' => $total * $units,
                 'storage_units' => $units,
                 'storage_used' => $used_calc * $units,

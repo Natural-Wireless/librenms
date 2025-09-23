@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CiscoNSTrapTest.php
  *
@@ -25,7 +26,7 @@ namespace LibreNMS\Tests\Feature\SnmpTraps;
 
 use LibreNMS\Enum\Severity;
 
-class CiscoNSTrapTest extends SnmpTrapTestCase
+final class CiscoNSTrapTest extends SnmpTrapTestCase
 {
     /**
      * Test Axis Video trap handlers

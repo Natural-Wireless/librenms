@@ -1,4 +1,5 @@
 <?php
+
 /**
  * MgmtTrapNmsAlarmTest.php
  *
@@ -32,7 +33,7 @@ namespace LibreNMS\Tests\Feature\SnmpTraps;
 
 use LibreNMS\Enum\Severity;
 
-class MgmtTrapNmsAlarmTest extends SnmpTrapTestCase
+final class MgmtTrapNmsAlarmTest extends SnmpTrapTestCase
 {
     public function testAlarmClear(): void
     {

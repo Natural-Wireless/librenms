@@ -53,7 +53,7 @@ if (isset($vars['searchPhrase']) && ! empty($vars['searchPhrase'])) {
     }
 }
 
-$pag = $query->paginate($rowCount);
+$pag = $query->paginate($rowCount, page: $page);
 
 foreach ($pag->items() as $arp) {
     if ($arp->port->ifInErrors_delta > 0 || $arp->port->ifOutErrors_delta > 0) {
@@ -64,8 +64,8 @@ foreach ($pag->items() as $arp) {
 
     if ($arp->remote_ports_maybe) {
         $remote_port = $arp->remote_ports_maybe->first();
-        if ($remote_port->port_id != $arp->port_id) {
-            $arp_name = Url::deviceLink($remote_port->device);
+        if ($remote_port?->port_id != $arp->port_id) {
+            $arp_name = Url::deviceLink($remote_port?->device);
             $arp_if = Url::portLink($remote_port);
         } else {
             $arp_name = 'Localhost';
