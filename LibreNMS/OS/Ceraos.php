@@ -272,7 +272,8 @@ class Ceraos extends OS implements OSDiscovery, WirelessXpiDiscovery, WirelessFr
                 'ceraos-main-rx',
                 $index,
                 $ifNames[$index] . ' RX Main',
-                $data['MWRM-RADIO-MIB::genEquipRfuStatusRxLevel']
+                $data['MWRM-RADIO-MIB::genEquipRfuStatusRxLevel'],
+                low_limit: -60, low_warn: -50
             );
         }
 
