@@ -6,6 +6,7 @@ use App\Actions\Device\CheckDeviceAvailability;
 use App\Events\DevicePolled;
 use App\Events\PollingDevice;
 use App\Facades\LibrenmsConfig;
+use App\Facades\Rrd;
 use App\Models\Device;
 use App\Models\Eventlog;
 use App\Polling\Measure\Measurement;
@@ -54,6 +55,7 @@ class PollDevice implements ShouldQueue
     public function handle(): void
     {
         $this->initDevice();
+        $connectivity = new ConnectivityHelper($this->device);
         $this->initRrdDirectory();
         PollingDevice::dispatch($this->device);
         $this->os = OS::make($this->deviceArray);
@@ -64,7 +66,7 @@ class PollDevice implements ShouldQueue
         // check and save status
         app(CheckDeviceAvailability::class)->execute($this->device, true);
 
-        $this->pollModules();
+        $this->pollModules($connectivity);
 
         $measurement->end();
 
@@ -74,7 +76,7 @@ class PollDevice implements ShouldQueue
                 $this->recordPerformance($measurement);
             }
 
-            if (ConnectivityHelper::pingIsAllowed($this->device)) {
+            if ($connectivity->icmpIsEnabled()) {
                 $this->os->enableGraph('ping_perf');
             }
 
@@ -94,7 +96,7 @@ class PollDevice implements ShouldQueue
             $measurement->getDuration()));
 
         // add log file line, this is used by the simple python dispatcher watchdog
-        Log::channel('log_file')->alert(sprintf('INFO: device:poll %s (%s) polled in %0.3fs',
+        Log::alert(sprintf('INFO: device:poll %s (%s) polled in %0.3fs',
             $this->device->hostname,
             $this->device->device_id,
             $measurement->getDuration()));
@@ -108,7 +110,7 @@ class PollDevice implements ShouldQueue
         DevicePolled::dispatch($this->device);
     }
 
-    private function pollModules(): void
+    private function pollModules(ConnectivityHelper $connectivity): void
     {
         // update $device array status
         $this->deviceArray['status'] = $this->device->status;
@@ -122,14 +124,14 @@ class PollDevice implements ShouldQueue
 
         $datastore = app('Datastore');
 
-        foreach ($this->moduleList->modulesWithStatus(ProcessType::poller, $this->device) as $module => $module_status) {
+        foreach ($this->moduleList->modulesWithStatus(ProcessType::Poller, $this->device) as $module => $module_status) {
             $should_poll = false;
             $start_memory = memory_get_usage();
             $module_start = microtime(true);
 
             try {
                 $instance = Module::fromName($module);
-                $should_poll = $instance->shouldPoll($this->os, $module_status);
+                $should_poll = $instance->shouldPoll($this->os, $module_status, $connectivity);
 
                 if ($should_poll) {
                     Log::info("#### Load poller module $module ####\n");
@@ -155,7 +157,7 @@ class PollDevice implements ShouldQueue
             if ($should_poll) {
                 Log::info('');
                 app(MeasurementManager::class)->printChangedStats();
-                Module::savePerformance($module, ProcessType::poller, $module_start, $start_memory);
+                Module::savePerformance($module, ProcessType::Poller, $module_start, $start_memory);
                 $this->os->enableGraph('poller_modules_perf');
                 Log::info("#### Unload poller module $module ####\n");
             }
@@ -166,7 +168,7 @@ class PollDevice implements ShouldQueue
     {
         \DeviceCache::setPrimary($this->device_id);
         $this->device = \DeviceCache::getPrimary();
-        $this->device->ip = ($this->device->overwrite_ip ?: Dns::lookupIp($this->device)) ?: $this->device->ip;
+        $this->device->ip = Dns::lookupIp($this->device) ?? $this->device->ip;
 
         $this->deviceArray = $this->device->toArray();
         if ($os_group = LibrenmsConfig::get("os.{$this->device->os}.group")) {
@@ -184,7 +186,7 @@ EOH, $this->device->hostname, $os_group ? " ($os_group)" : '', $this->device->de
 
     private function initRrdDirectory(): void
     {
-        $host_rrd = \Rrd::name($this->device->hostname, '', '');
+        $host_rrd = Rrd::dirFromHost($this->device->hostname);
         if (LibrenmsConfig::get('rrd.enable', true) && ! is_dir($host_rrd)) {
             try {
                 mkdir($host_rrd);
