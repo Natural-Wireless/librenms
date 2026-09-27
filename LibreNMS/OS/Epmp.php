@@ -633,7 +633,7 @@ class Epmp extends OS implements
     {
         return [
             new WirelessSensor(
-                'power',
+                WirelessSensorType::Power,
                 $this->getDeviceId(),
                 '.1.3.6.1.4.1.17713.21.1.11.3.0',
                 'epmp',
@@ -642,7 +642,7 @@ class Epmp extends OS implements
                 null
             ),
             new WirelessSensor(
-                'power',
+                WirelessSensorType::Power,
                 $this->getDeviceId(),
                 '.1.3.6.1.4.1.17713.21.1.2.5.0',
                 'epmp',
