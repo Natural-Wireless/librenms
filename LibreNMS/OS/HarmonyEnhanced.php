@@ -6,11 +6,14 @@ use LibreNMS\Device\WirelessSensor;
 use LibreNMS\Enum\WirelessSensorType;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessErrorsDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessPowerDiscovery;
+use LibreNMS\Interfaces\Discovery\Sensors\WirelessRateDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessRssiDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessSnrDiscovery;
+use LibreNMS\Interfaces\Polling\Sensors\WirelessRatePolling;
 use LibreNMS\OS;
+use SnmpQuery;
 
-class HarmonyEnhanced extends OS implements WirelessRssiDiscovery, WirelessSnrDiscovery, WirelessPowerDiscovery, WirelessErrorsDiscovery
+class HarmonyEnhanced extends OS implements WirelessRssiDiscovery, WirelessSnrDiscovery, WirelessPowerDiscovery, WirelessErrorsDiscovery, WirelessRateDiscovery, WirelessRatePolling
 {
     public function discoverWirelessRssi()
     {
@@ -87,5 +90,62 @@ class HarmonyEnhanced extends OS implements WirelessRssiDiscovery, WirelessSnrDi
         }
 
         return $sensors;
+    }
+
+    public function discoverWirelessRate()
+    {
+        $oids = snmpwalk_cache_oid($this->getDeviceArray(), 'mwrEmcRadioActualTxProfile', [], 'MWR-RADIO-MC-MIB', null, '-Ob');
+        $sensors = [];
+        foreach ($oids as $index => $entry) {
+            $rate = $this->profileToRate($entry['mwrEmcRadioActualTxProfile'] ?? '');
+            if ($rate === null) {
+                continue;
+            }
+
+            $sensors[] = new WirelessSensor(
+                WirelessSensorType::Rate,
+                $this->getDeviceId(),
+                '.1.3.6.1.4.1.7262.4.5.12.203.1.1.10.' . $index,
+                'harmony_enhanced',
+                $index,
+                'TX Capacity Radio ' . $index,
+                $rate
+            );
+        }
+
+        return $sensors;
+    }
+
+    /**
+     * The radio only reports the active TX profile name, so derive the rate from it
+     */
+    public function pollWirelessRate(array $sensors)
+    {
+        $oids = [];
+        foreach ($sensors as $sensor) {
+            $oids[$sensor['sensor_id']] = current($sensor['sensor_oids']);
+        }
+
+        $profiles = SnmpQuery::numeric()->get(array_values($oids))->values();
+
+        $data = [];
+        foreach ($oids as $sensor_id => $oid) {
+            // always return a value, standard polling can't parse the profile name
+            $data[$sensor_id] = $this->profileToRate($profiles[$oid] ?? '');
+        }
+
+        return $data;
+    }
+
+    /**
+     * Profile names embed the capacity in Mbps, e.g. en50_454_2048qam
+     */
+    private function profileToRate(string $profile): ?int
+    {
+        if (preg_match('/^[a-z]+[\d.]+_(\d+)_/i', trim($profile, '" '), $matches)) {
+            return (int) $matches[1] * 1000000;
+        }
+
+        return null;
     }
 }

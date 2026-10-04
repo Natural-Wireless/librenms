@@ -6,11 +6,12 @@ use LibreNMS\Device\WirelessSensor;
 use LibreNMS\Enum\WirelessSensorType;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessErrorsDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessPowerDiscovery;
+use LibreNMS\Interfaces\Discovery\Sensors\WirelessRateDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessRssiDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessSnrDiscovery;
 use LibreNMS\OS;
 
-class HorizonCompact extends OS implements WirelessSnrDiscovery, WirelessPowerDiscovery, WirelessRssiDiscovery, WirelessErrorsDiscovery
+class HorizonCompact extends OS implements WirelessSnrDiscovery, WirelessPowerDiscovery, WirelessRateDiscovery, WirelessRssiDiscovery, WirelessErrorsDiscovery
 {
     public function discoverWirelessSnr()
     {
@@ -45,6 +46,15 @@ class HorizonCompact extends OS implements WirelessSnrDiscovery, WirelessPowerDi
 
         return [
             new WirelessSensor(WirelessSensorType::Errors, $this->getDeviceId(), $oid, 'horizon-compact', 0, 'Rx Errors', null, 1, 10),
+        ];
+    }
+
+    public function discoverWirelessRate()
+    {
+        // Current modem speed estimate; divide by 10000 for Mbps, so multiply by 100 for bps
+        return [
+            new WirelessSensor(WirelessSensorType::Rate, $this->getDeviceId(), '.1.3.6.1.4.1.7262.2.2.5.1.2.7.0', 'horizon-compact-tx', 0, 'Tx Capacity', null, 100),
+            new WirelessSensor(WirelessSensorType::Rate, $this->getDeviceId(), '.1.3.6.1.4.1.7262.2.2.5.1.2.6.0', 'horizon-compact-rx', 0, 'Rx Capacity', null, 100),
         ];
     }
 }

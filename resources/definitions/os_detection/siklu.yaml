@@ -6,6 +6,7 @@ over:
     - { graph: device_bits, text: Traffic }
     - { graph: device_wireless_rssi, text: RSSI }
     - { graph: device_wireless_snr, text: CINR }
+    - { graph: device_wireless_rate, text: Capacity }
 discovery:
     -
         sysObjectID:

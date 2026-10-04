@@ -5,6 +5,7 @@ icon: dragonwave
 over:
     - { graph: device_wireless_snr, text: SNR }
     - { graph: device_wireless_rssi, text: RSL }
+    - { graph: device_wireless_rate, text: Capacity }
 discovery:
     -
         sysObjectID:
