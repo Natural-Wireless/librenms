@@ -5,6 +5,7 @@ icon: nec
 over:
     - { graph: device_wireless_rssi, text: 'RSSI' }
     - { graph: device_wireless_power, text: 'Power' }
+    - { graph: device_wireless_rate, text: 'Radio Capacity' }
 discovery:
     -
         sysObjectID:

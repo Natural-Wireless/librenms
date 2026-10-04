@@ -5,11 +5,12 @@ namespace LibreNMS\OS;
 use LibreNMS\Device\WirelessSensor;
 use LibreNMS\Enum\WirelessSensorType;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessPowerDiscovery;
+use LibreNMS\Interfaces\Discovery\Sensors\WirelessRateDiscovery;
 use LibreNMS\Interfaces\Discovery\Sensors\WirelessRssiDiscovery;
 use LibreNMS\OS;
 use App\Models\Device;
 
-class NecIpasolinkExAdvanced extends OS implements WirelessPowerDiscovery, WirelessRssiDiscovery
+class NecIpasolinkExAdvanced extends OS implements WirelessPowerDiscovery, WirelessRateDiscovery, WirelessRssiDiscovery
 {
     public function discoverOS(Device $device): void
     {
@@ -32,6 +33,16 @@ class NecIpasolinkExAdvanced extends OS implements WirelessPowerDiscovery, Wirel
         $oid = '.1.3.6.1.4.1.119.2.3.69.501.8.1.1.6.16842752';
         return [
             new WirelessSensor(WirelessSensorType::Rssi, $this->getDeviceId(), $oid, 'nec-ipasolink-ex-advanced', 0, 'RSL', null, 1, 1, "sum", null, null, -60, null, -50),
+        ];
+    }
+
+    public function discoverWirelessRate()
+    {
+        // Current radio capacity in kbps; follows AMBR modulation/bandwidth changes
+        $oid = '.1.3.6.1.4.1.119.2.3.69.501.5.21.22.1.3.16842752';
+
+        return [
+            new WirelessSensor(WirelessSensorType::Rate, $this->getDeviceId(), $oid, 'nec-ipasolink-ex-advanced', 0, 'Radio Capacity', null, 1000),
         ];
     }
 }
