@@ -24,11 +24,13 @@
 
 namespace LibreNMS\Device;
 
+use App\Facades\DeviceCache;
 use App\Facades\LibrenmsConfig;
 use App\Models\Sensor;
 use App\Models\StateIndex;
 use App\Models\StateTranslation;
 use Illuminate\Support\Facades\Log;
+use LibreNMS\Util\Url;
 use Symfony\Component\Process\Process;
 
 /**
@@ -36,8 +38,14 @@ use Symfony\Component\Process\Process;
  * captures. Its --librenms mode prints every sensor (class, index, descr, limits, value) and
  * the state tables; this class turns that into sensors at discovery and values when polling.
  *
- * Opt-in per NPort; nothing is sent to an NPort that isn't listed:
- *   lnms config:set --ignore-checks cyclone_bms.+ '{"device":"10.16.4.12","options":"-a 1 --bank --packs 3"}'
+ * Every NPort is auto-detected: discovery asks it for a bank reading (-a 1 --bank) and keeps
+ * the battery sensors only if a battery answers. Once found, the packs it has seen stay
+ * (--min-packs), so a pack that stops answering alarms instead of disappearing.
+ * Turn detection off with: lnms config:set --ignore-checks cyclone_bms_detect false
+ *
+ * Per-NPort overrides, which win over detection:
+ *   lnms config:set --ignore-checks cyclone_bms.+ '{"device":"<nport-host>","options":"-a 1 --bank --packs 3"}'
+ *   lnms config:set --ignore-checks cyclone_bms.+ '{"device":"<other-nport>","options":"off"}'   (never contact it)
  * "device" matches the device's hostname, overwrite IP, sysName or device_id; "options" are
  * cyclone_bms.py options (string or list).
  */
@@ -51,19 +59,55 @@ class CycloneBattery
      */
     public const OID = '.1.3.6.1.2.1.1.3.0';
 
+    /** html/images/os/cyclone.png (list icon) and html/images/logos/cyclone.png (device page logo) */
+    public const ICON = 'cyclone.png';
+
     private const STATUS_TYPE = 'cyclone-bms-status';
     private const STATUS_NOT_RESPONDING = 3;
     private const CACHE_SECONDS = 120;
+    private const DETECT_OPTIONS = ['-a', '1', '--bank'];
 
     /** @var array<int, array{time: int, data: ?array}> */
     private static array $cache = [];
 
+    /** @var array<int, array{time: int, packs: int}> */
+    private static array $known = [];
+
     /**
-     * cyclone_bms.py options for this device, or null if it has no batteries configured.
+     * cyclone_bms.py options for this device, or null if it must not be contacted.
      *
      * @return string[]|null
      */
     public static function options(array $device): ?array
+    {
+        $entry = self::entry($device);
+        if ($entry !== null) {
+            $options = $entry['options'] ?? [];
+            if ($options === 'off' || $options === false) {
+                return null;
+            }
+
+            return is_array($options)
+                ? array_values(array_map('strval', $options))
+                : preg_split('/\s+/', trim((string) $options), -1, PREG_SPLIT_NO_EMPTY);
+        }
+
+        if (! LibrenmsConfig::get('cyclone_bms_detect', true)) {
+            return null;
+        }
+
+        $packs = self::knownPacks($device);
+
+        // an NPort with nothing found yet gets one connection attempt, not three
+        return $packs > 0
+            ? array_merge(self::DETECT_OPTIONS, ['--min-packs', (string) $packs])
+            : array_merge(self::DETECT_OPTIONS, ['--connect-attempts', '1']);
+    }
+
+    /**
+     * This device's cyclone_bms config entry, if it has one.
+     */
+    private static function entry(array $device): ?array
     {
         $names = array_filter([
             (string) ($device['device_id'] ?? ''),
@@ -74,15 +118,30 @@ class CycloneBattery
 
         foreach ((array) LibrenmsConfig::get('cyclone_bms', []) as $entry) {
             if (in_array((string) ($entry['device'] ?? ''), $names, true)) {
-                $options = $entry['options'] ?? [];
-
-                return is_array($options)
-                    ? array_values(array_map('strval', $options))
-                    : preg_split('/\s+/', trim((string) $options), -1, PREG_SPLIT_NO_EMPTY);
+                return (array) $entry;
             }
         }
 
         return null;
+    }
+
+    /**
+     * How many packs this device already has sensors for (0 = no battery found yet).
+     */
+    private static function knownPacks(array $device): int
+    {
+        $id = (int) $device['device_id'];
+        $known = self::$known[$id] ?? null;
+        if ($known === null || $known['time'] <= time() - self::CACHE_SECONDS) {
+            $packs = Sensor::where('device_id', $id)
+                ->where('sensor_type', 'like', self::TYPE_PREFIX . '%')
+                ->pluck('sensor_index')
+                ->map(fn ($index) => preg_match('/^cyclone\.(\d+)\./', (string) $index, $m) ? (int) $m[1] : 0)
+                ->max();
+            $known = self::$known[$id] = ['time' => time(), 'packs' => (int) $packs];
+        }
+
+        return $known['packs'];
     }
 
     /**
@@ -109,8 +168,8 @@ class CycloneBattery
         if (! is_array($data) || ! isset($data['sensors'], $data['states'])) {
             Log::error("Cyclone battery read failed for $host: " . trim($process->getErrorOutput() ?: $process->getOutput()));
             $data = null;
-        } elseif (! empty($data['error'])) {
-            Log::warning("Cyclone battery on $host: {$data['error']}");
+        } elseif (! empty($data['error']) && (self::entry($device) !== null || self::knownPacks($device) > 0)) {
+            Log::warning("Cyclone battery on $host: {$data['error']}");  // an NPort without a battery is expected to fail
         }
 
         self::$cache[$device['device_id']] = ['time' => time(), 'data' => $data];
@@ -123,11 +182,21 @@ class CycloneBattery
      */
     public static function discover(array $device, string $class): void
     {
-        if (self::options($device) === null) {
+        $options = self::options($device);
+        $data = $options === null ? null : self::read($device);
+
+        // configured by hand, found before, or answering now; otherwise the NPort has no battery
+        $battery = $options !== null
+            && (self::entry($device) !== null || self::knownPacks($device) > 0 || ($data['packs_answered'] ?? 0) > 0);
+
+        if ($class === 'state') {
+            self::setIcon($device, $battery);
+        }
+
+        if (! $battery) {
             return;
         }
 
-        $data = self::read($device);
         $existing = static::existingSensors($device, $class);
 
         if ($data === null) {
@@ -186,6 +255,27 @@ class CycloneBattery
         }
 
         return $sensor['sensor_current'];
+    }
+
+    /**
+     * Show the Cyclone logo on an NPort with a battery behind it. The OS module applies the
+     * override_icon attribute on every poll; it is set here so the logo appears right away.
+     */
+    private static function setIcon(array $device, bool $battery): void
+    {
+        $model = DeviceCache::get((int) $device['device_id']);
+        $current = $model->getAttrib('override_icon');
+
+        if ($battery && $current !== self::ICON) {
+            $model->setAttrib('override_icon', self::ICON);
+        } elseif (! $battery && $current === self::ICON) {
+            $model->forgetAttrib('override_icon');
+        } else {
+            return;
+        }
+
+        $model->icon = basename(Url::findOsImage($model->os, $model->features, $model->getAttrib('override_icon')));
+        $model->save();
     }
 
     private static function rediscover(array $device, string $class, array $existing): void

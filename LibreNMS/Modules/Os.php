@@ -149,7 +149,7 @@ class Os implements Module
     {
         $device = $os->getDevice();
 
-        $device->icon = basename(Url::findOsImage($device->os, $device->features, null, 'images/os/'));
+        $device->icon = basename(Url::findOsImage($device->os, $device->features, $device->getAttrib('override_icon'), 'images/os/'));
 
         Log::info(trans('device.attributes.location') . ': ' . $device->location?->display());
         foreach (['hardware', 'version', 'features', 'serial'] as $attribute) {

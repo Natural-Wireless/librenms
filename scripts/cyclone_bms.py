@@ -536,7 +536,7 @@ def parse_serials(info):
 # Polling
 # --------------------------------------------------------------------------------------
 
-def poll(link, addresses, bank=False, relay=False, expected_packs=None, with_ids=False):
+def poll(link, addresses, bank=False, relay=False, expected_packs=None, with_ids=False, min_packs=None):
     """Returns (packs, notes). packs is in a fixed order; a pack that couldn't be read is
     {"address": ..., "error": "..."} so the caller can still emit a stable value set.
     notes are bank-level warnings."""
@@ -548,7 +548,7 @@ def poll(link, addresses, bank=False, relay=False, expected_packs=None, with_ids
         analog = parse_analog(analog_info, multi=True)
         alarms = parse_alarm(link.query(adr, CID2_ALARM, info)["info"], multi=True)
         reported = analog_info[1] if len(analog_info) > 1 else 0
-        expected = expected_packs or max(reported, len(analog), 1)
+        expected = expected_packs or max(reported, len(analog), min_packs or 1)
         if len(analog) > expected:
             notes.append(f"bank reply has {len(analog)} packs, expected {expected} (update --packs)")
             analog = analog[:expected]
@@ -934,6 +934,9 @@ def build_parser():
                    help="send every request to the first address (the master) and select the pack with INFO")
     p.add_argument("--packs", type=int, default=None,
                    help="with --bank: number of packs expected (missing ones go CRITICAL)")
+    p.add_argument("--min-packs", type=int, default=None,
+                   help="with --bank: like --packs, but more packs are accepted when the bank reports them "
+                        "(LibreNMS auto-detection passes the packs it has already seen)")
     p.add_argument("-t", "--timeout", type=float, default=2.0, help="per-request timeout, seconds")
     p.add_argument("--connect-attempts", type=int, default=3, help="tries to connect to the NPort, 2 s apart")
     mode = p.add_mutually_exclusive_group()
@@ -958,7 +961,7 @@ def build_parser():
 
 
 def expected_packs(args):
-    return len(args.addresses) if not args.bank else (args.packs or 1)
+    return len(args.addresses) if not args.bank else (args.packs or args.min_packs or 1)
 
 
 def main(argv=None):
@@ -974,7 +977,8 @@ def main(argv=None):
     notes = []
     try:
         with Link(args.host, args.port, args.timeout, args.verbose, args.connect_attempts) as link:
-            packs, notes = poll(link, args.addresses, args.bank, args.relay, args.packs, with_ids=args.json)
+            packs, notes = poll(link, args.addresses, args.bank, args.relay, args.packs, with_ids=args.json,
+                                min_packs=args.min_packs)
     except BmsError as e:
         if args.librenms:
             # Nothing answered: still report every sensor so LibreNMS keeps them.
