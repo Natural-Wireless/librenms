@@ -26,6 +26,7 @@ namespace LibreNMS\Device;
 
 use App\Facades\DeviceCache;
 use App\Facades\LibrenmsConfig;
+use App\Models\Device;
 use App\Models\Sensor;
 use App\Models\StateIndex;
 use App\Models\StateTranslation;
@@ -61,6 +62,13 @@ class CycloneBattery
 
     /** html/images/os/cyclone.png (list icon) and html/images/logos/cyclone.png (device page logo) */
     public const ICON = 'cyclone.png';
+
+    /** Device header graphs for an NPort with batteries, drawn by includes/html/graphs/device/cyclone_*.inc.php */
+    public const OVERVIEW_GRAPHS = [
+        ['graph' => 'device_cyclone_soc', 'text' => 'State of Charge'],
+        ['graph' => 'device_cyclone_voltage', 'text' => 'Battery Voltage'],
+        ['graph' => 'device_cyclone_current', 'text' => 'Battery Current'],
+    ];
 
     private const STATUS_TYPE = 'cyclone-bms-status';
     private const STATUS_NOT_RESPONDING = 3;
@@ -255,6 +263,16 @@ class CycloneBattery
         }
 
         return $sensor['sensor_current'];
+    }
+
+    /**
+     * Header graphs for an NPort that batteries were found on, or null for any other device.
+     * Keyed off the icon setIcon() gives it: the icon is loaded with every device, so pages that
+     * list many devices need no extra query.
+     */
+    public static function overviewGraphs(Device $device): ?array
+    {
+        return ($device->getAttributes()['icon'] ?? null) === self::ICON ? self::OVERVIEW_GRAPHS : null;
     }
 
     /**

@@ -33,6 +33,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use LibreNMS\Data\Graphing\GraphImage;
 use LibreNMS\Data\Graphing\GraphParameters;
+use LibreNMS\Device\CycloneBattery;
 use LibreNMS\Enum\ImageFormat;
 use LibreNMS\Exceptions\RrdGraphException;
 use LibreNMS\RRD\RrdPath;
@@ -277,6 +278,10 @@ class Graph
     {
         if ($device->snmp_disable) {
             return Arr::wrap(LibrenmsConfig::getOsSetting('ping', 'over'));
+        }
+
+        if ($graphs = CycloneBattery::overviewGraphs($device)) {
+            return $graphs;
         }
 
         if ($graphs = LibrenmsConfig::getOsSetting($device->os, 'over')) {
