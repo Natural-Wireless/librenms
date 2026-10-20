@@ -776,6 +776,7 @@ def librenms_doc(packs, t, notes=(), error=None):
         add("temperature", "mos_temp", "MOSFET", d.get("mos_temp_c"), MOSFET_TEMP_LIMITS)
         add("temperature", "env_temp", "ambient", d.get("env_temp_c"), temp_limits)
         add("count", "cycles", "cycles", d.get("cycles"), CYCLE_LIMITS)
+        add("count", "remaining_ah", "remaining capacity (Ah)", d.get("remaining_ah"))
         if t.cells:
             cells = d.get("cells_mv") or [None] * CELLS_PER_PACK
             for c, mv in enumerate(cells, 1):
