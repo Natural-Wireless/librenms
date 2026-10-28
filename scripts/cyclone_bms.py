@@ -54,6 +54,7 @@ CID2_PACK_COUNT = 0x90
 
 INFO_ALL_PACKS = 0xFF
 CELLS_PER_PACK = 16
+BANK_WAIT_S = 5.0        # --bank: how long to keep asking a master that is still collecting its packs
 
 RTN_CODES = {
     0x00: "normal",
@@ -536,17 +537,43 @@ def parse_serials(info):
 # Polling
 # --------------------------------------------------------------------------------------
 
-def poll(link, addresses, bank=False, relay=False, expected_packs=None, with_ids=False, min_packs=None):
+def read_bank(link, adr, want, wait):
+    """The master's INFO=0xFF analog and alarm replies.
+
+    After a pause (30 s or more), the master's first replies list only itself while it polls the
+    other packs over RS485 (~1.5 s for 3 packs; Cyclone office bank, 2026-10-28). So ask again for
+    up to `wait` seconds and keep the reply with the most packs. Stop early once `want` packs
+    (2 or more) have answered; a one-pack reply can't be told apart from a master still waking up.
+    """
+    info = bytes([INFO_ALL_PACKS])
+    deadline = time.monotonic() + wait
+    best_info, best, best_n = None, [], -1
+    while True:
+        analog_info = link.query(adr, CID2_ANALOG, info)["info"]
+        analog = parse_analog(analog_info, multi=True)
+        answered = sum("error" not in a for a in analog)
+        if answered > best_n:
+            best_info, best, best_n = analog_info, analog, answered
+        if (want and want >= 2 and answered >= want) or time.monotonic() >= deadline:
+            break
+    alarms = parse_alarm(link.query(adr, CID2_ALARM, info)["info"], multi=True)
+    for _ in range(2):  # the alarm reply can lag the analog one by a request
+        if len(alarms) >= len(best):
+            break
+        alarms = parse_alarm(link.query(adr, CID2_ALARM, info)["info"], multi=True)
+    return best_info, best, alarms
+
+
+def poll(link, addresses, bank=False, relay=False, expected_packs=None, with_ids=False, min_packs=None,
+         bank_wait=None):
     """Returns (packs, notes). packs is in a fixed order; a pack that couldn't be read is
     {"address": ..., "error": "..."} so the caller can still emit a stable value set.
     notes are bank-level warnings."""
     notes = []
     if bank:
         adr = addresses[0]
-        info = bytes([INFO_ALL_PACKS])
-        analog_info = link.query(adr, CID2_ANALOG, info)["info"]
-        analog = parse_analog(analog_info, multi=True)
-        alarms = parse_alarm(link.query(adr, CID2_ALARM, info)["info"], multi=True)
+        analog_info, analog, alarms = read_bank(link, adr, expected_packs or min_packs,
+                                                BANK_WAIT_S if bank_wait is None else bank_wait)
         reported = analog_info[1] if len(analog_info) > 1 else 0
         expected = expected_packs or max(reported, len(analog), min_packs or 1)
         if len(analog) > expected:
@@ -938,6 +965,9 @@ def build_parser():
     p.add_argument("--min-packs", type=int, default=None,
                    help="with --bank: like --packs, but more packs are accepted when the bank reports them "
                         "(LibreNMS auto-detection passes the packs it has already seen)")
+    p.add_argument("--bank-wait", type=float, default=BANK_WAIT_S,
+                   help="with --bank: seconds to keep asking while the master collects the other packs "
+                        "(after a pause it first lists only itself); ends early once --packs/--min-packs (2+) answer")
     p.add_argument("-t", "--timeout", type=float, default=2.0, help="per-request timeout, seconds")
     p.add_argument("--connect-attempts", type=int, default=3, help="tries to connect to the NPort, 2 s apart")
     mode = p.add_mutually_exclusive_group()
@@ -979,7 +1009,7 @@ def main(argv=None):
     try:
         with Link(args.host, args.port, args.timeout, args.verbose, args.connect_attempts) as link:
             packs, notes = poll(link, args.addresses, args.bank, args.relay, args.packs, with_ids=args.json,
-                                min_packs=args.min_packs)
+                                min_packs=args.min_packs, bank_wait=args.bank_wait)
     except BmsError as e:
         if args.librenms:
             # Nothing answered: still report every sensor so LibreNMS keeps them.
