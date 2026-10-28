@@ -54,7 +54,7 @@ CID2_PACK_COUNT = 0x90
 
 INFO_ALL_PACKS = 0xFF
 CELLS_PER_PACK = 16
-BANK_WAIT_S = 5.0        # --bank: how long to keep asking a master that is still collecting its packs
+BANK_WAIT_S = 15.0       # --bank: how long to keep asking a master that is still collecting its packs
 
 RTN_CODES = {
     0x00: "normal",
@@ -541,9 +541,10 @@ def read_bank(link, adr, want, wait):
     """The master's INFO=0xFF analog and alarm replies.
 
     After a pause (30 s or more), the master's first replies list only itself while it polls the
-    other packs over RS485 (~1.5 s for 3 packs; Cyclone office bank, 2026-10-28). So ask again for
-    up to `wait` seconds and keep the reply with the most packs. Stop early once `want` packs
-    (2 or more) have answered; a one-pack reply can't be told apart from a master still waking up.
+    other packs over RS485: 1.5-3.5 s for 3 packs, once over 5 s (Cyclone office bank, 2026-10-28).
+    So ask again for up to `wait` seconds and keep the reply with the most packs. Stop early once
+    `want` packs (2 or more) have answered; a one-pack reply can't be told apart from a master
+    still waking up.
     """
     info = bytes([INFO_ALL_PACKS])
     deadline = time.monotonic() + wait
